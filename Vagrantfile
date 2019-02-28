@@ -118,9 +118,16 @@ Vagrant.configure("2") do |config|
   # Clone git repository.
   config.vm.provision :shell, inline: <<-SCRIPT
     
-    eval `ssh-agent -s`
+    # Start ssh agent
+    eval `ssh-agent /bin/bash`
+
+    # Take ownership of ssh key
+    chmod 400 ~/.ssh/deploy_id_rsa
+
+    # Add ssh key
     ssh-add ~/.ssh/deploy_id_rsa
-  
+
+    # Clone repo
     git clone git@github.com:illinoistech-itm/2019-team-07f $APP_PATH/
   
   SCRIPT
