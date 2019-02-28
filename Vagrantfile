@@ -102,19 +102,26 @@ Vagrant.configure("2") do |config|
   
     # This is where the app's code will live.
     export APP_PATH=/usr/local/2019-team-07f
+
+    # Export an environment variable into /etc/profile.d/app_path.sh
+    echo export APP_PATH=${APP_PATH} > /etc/profile.d/app_path.sh
     
     # Create folder if it doesn't exist.
     mkdir -p $APP_PATH
-  
+      
   SCRIPT
   
   # Copy SSH keys.
-  config.vm.provision :file, source: "./id_rsa.pub", destination: "~/.ssh/id_rsa.pub"
+  config.vm.provision :file, source: "./id_rsa.pub",  destination: "~/.ssh/deploy_id_rsa.pub"
+  config.vm.provision :file, source: "./id_rsa",      destination: "~/.ssh/deploy_id_rsa"
     
   # Clone git repository.
   config.vm.provision :shell, inline: <<-SCRIPT
+    
+    eval `ssh-agent -s`
+    ssh-add ~/.ssh/deploy_id_rsa
   
-    git clone https://github.com/illinoistech-itm/2019-team-07f ${APP_PATH}/
+    git clone git@github.com:illinoistech-itm/2019-team-07f $APP_PATH/
   
   SCRIPT
   
