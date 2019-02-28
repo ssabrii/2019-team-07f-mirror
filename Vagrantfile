@@ -39,6 +39,10 @@ Vagrant.configure("2") do |config|
   # via 127.0.0.1 to disable public access
   # config.vm.network "forwarded_port", guest: 8080, host: 8080, host_ip: "127.0.0.1"   
 
+  # Disable /vagrant/ shared folder to force using git cloning.
+  config.vm.synced_folder ".", "/vagrant", disabled: true
+
+
   # SSH settings.
   config.ssh.insert_key = false
   config.ssh.username = "vagrant"
@@ -92,6 +96,28 @@ Vagrant.configure("2") do |config|
   #   apt-get install -y apache2
   # SHELL
 
+
+  # Set common environment variables.
+  config.vm.provision :shell, run: "always", inline: <<-SCRIPT
+  
+    # This is where the app's code will live.
+    export APP_PATH=/usr/local/2019-team-07f
+    
+    # Create folder if it doesn't exist.
+    mkdir -p $APP_PATH
+  
+  SCRIPT
+  
+  # Copy SSH keys.
+  config.vm.provision :file, source: "./id_rsa.pub", destination: "~/.ssh/id_rsa.pub"
+    
+  # Clone git repository.
+  config.vm.provision :shell, inline: <<-SCRIPT
+  
+    git clone https://github.com/illinoistech-itm/2019-team-07f ${APP_PATH}/
+  
+  SCRIPT
+  
   # Set up Python.
   config.vm.provision :shell, path: "vagrant-config/scripts/setup-python.sh"
 
