@@ -112,8 +112,13 @@ Vagrant.configure("2") do |config|
   SCRIPT
   
   # Copy SSH keys.
-  config.vm.provision :file, source: "./id_rsa.pub",  destination: "~/.ssh/deploy_id_rsa.pub"
-  config.vm.provision :file, source: "./id_rsa",      destination: "~/.ssh/deploy_id_rsa"
+  config.vm.provision :file, 
+    source: "#{Dir.home}/.ssh/2019-team-07f-id_rsa.pub",  
+    destination: "~/.ssh/deploy_id_rsa.pub"
+  
+  config.vm.provision :file, 
+    source: "#{Dir.home}/.ssh/2019-team-07f-id_rsa",
+    destination: "~/.ssh/deploy_id_rsa"
     
   # Clone git repository.
   config.vm.provision :shell, inline: <<-SCRIPT
@@ -121,8 +126,8 @@ Vagrant.configure("2") do |config|
     # Start ssh agent
     eval `ssh-agent /bin/bash`
 
-    # Take ownership of ssh key
-    chmod 400 ~/.ssh/deploy_id_rsa
+    # # Take ownership of ssh key
+    # chmod 400 ~/.ssh/deploy_id_rsa
 
     # Add ssh key
     ssh-add ~/.ssh/deploy_id_rsa
