@@ -1,4 +1,4 @@
-dist: xenial
+dist: trusty
 
 sudo: required
 
@@ -17,9 +17,9 @@ script:
 
   # Build all missing boxes.
   - cd ${TRAVIS_BUILD_DIR}/packer
-  - packer build ubuntu-mysql.json --virtualbox-no-vtx-check
-  - packer build ubuntu-storage.json --virtualbox-no-vtx-check
-  - packer build ubuntu-webserver.json --virtualbox-no-vtx-check
+  - packer build ubuntu-mysql.json 
+  - packer build ubuntu-storage.json
+  - packer build ubuntu-webserver.json 
 
   # Vagrant up!
   - cd ${TRAVIS_BUILD_DIR}/
